@@ -1,6 +1,5 @@
 ﻿use [M: XX\FINALPROJECT\HELPFORELDERLY.MDF]
---.5 צרי פונקצייה שתקבל קוד מתנדב ותחזיר כמה שירותים הוא נותן- ואין עוד 
---שנותנים כזה שירות
+--5. Create a function that accepts a volunteer code and returns the number of services they provide—and no one else provides that service.
 
 create function howManyUniqueHelpDoVolunteerGive(@id nchar(9))
 RETURNS int 
@@ -18,9 +17,8 @@ end
 drop function howManyUniqueHelpDoVolunteerGive
 
 print dbo.howManyUniqueHelpDoVolunteerGive('333333333')
---.6 צרי פרוצדורה המקבלת קוד מתנדב ושולפת : שם נכה, פלאפון, כתובות, שם 
---שירות תוכן בקשה , תאריך, עבור כל הבקשות הקרובות שלו ממויין על פי 
---תאריך. 
+--.6 Create a procedure that accepts a volunteer code and retrieves the disabled person's name, mobile number, addresses, service name, request content,
+--and date for all their upcoming requests, sorted by date.
 
 create procedure getNextVolunteeringDetails(@id nchar(9))
 as begin
@@ -45,9 +43,8 @@ print @ThisMonth
 print @AvgLastMonth
 
 
---.7 צרי פרוצדורה שתקבל קוד מתנדב ותחזיר כמה שעות תרם החודש, וממוצע 
---שעות שתרם בחודש האחרון
-
+--.7 Create a procedure that accepts a volunteer code and returns the number of hours contributed this month, as well as the average
+--hours contributed per month.
 
 CREATE PROCEDURE GetVolunteerHoursInfo(
     @IdVolunteer NCHAR(9),
@@ -55,7 +52,7 @@ CREATE PROCEDURE GetVolunteerHoursInfo(
     @AverageLastMonth FLOAT OUTPUT)
 AS
 BEGIN
-    -- סך כל השעות שהמתנדב תרם במהלך החודש הנוכחי
+    -- Total hours contributed by the volunteer during the current month
     SELECT @HoursThisMonth = SUM(r.NumHours)
     FROM ArrangedRequests ar
     JOIN Requests r ON ar.IdRequest = r.IdRequest
