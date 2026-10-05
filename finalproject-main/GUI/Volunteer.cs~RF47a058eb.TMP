@@ -1,0 +1,70 @@
+﻿using BLL;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SqlTypes;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace GUI
+{
+    public partial class Volunteer : Form
+    {
+        VolunteerBLL volunteerBLL = new VolunteerBLL();
+        ServicBLL servicBLL = new ServicBLL();
+        ServiceVolunteerBLL serviceVolunteerBLL= new ServiceVolunteerBLL();
+        public Volunteer()
+        {
+            InitializeComponent();
+            FillEx7("netivot");
+        }
+        public  void FillEx7(string id)
+        {
+            volunteerBLL.GetVolunteerHoursInfo(id);
+            
+        }
+        //1
+        private void ChechHoursBtn_Click(object sender, EventArgs e)
+        {
+            if(int.TryParse(txtId.Text.Trim(), out int id))
+            {
+                try
+                {
+                    int resteHours = servicBLL.MonthlyHoursRemaining(id);
+                    resteHourslbl.Text = $"שעות שנותרו החודש:{resteHours}";
+                }catch (Exception ex) {
+                    MessageBox.Show("Error: "+ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter a valid id(int id)");
+            }
+        }
+        //2
+        private void mostHoursBtn_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(txtId.Text.Trim(), out int id))
+            {
+                try
+                {
+                    int mostResteHours = serviceVolunteerBLL.VolunteersHaveMostHoursToDonateLeft(id);
+                    mostHoursBtn.Text = $"המתנדבים שנשאר להם הכי הרבה שעות:{mostResteHours}";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter a valid id(int id)");
+            }
+
+        }
+    }
+}
