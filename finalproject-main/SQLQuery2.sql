@@ -1,4 +1,4 @@
-﻿use [M: \FINALPROJECT\HELPFORELDERLY.MDF]
+﻿use [M: XX\FINALPROJECT\HELPFORELDERLY.MDF]
 --.5 צרי פונקצייה שתקבל קוד מתנדב ותחזיר כמה שירותים הוא נותן- ואין עוד 
 --שנותנים כזה שירות
 
