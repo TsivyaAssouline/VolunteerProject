@@ -1,8 +1,7 @@
 ﻿use [M:\xx\FinalProject\HelpForElderly.mdf]
 
---1
---צרי פונקצייה שתקבל קוד מתנדב ותחזיר כמה שעות חודשיות נותרו לו 
---החודש
+--1 Create a function that accepts a volunteer code and returns the number of monthly hours remaining for them
+--this month.
 create function MonthlyHoursRemaining (@idVolunteer nchar(9))
 returns int
 as begin
@@ -23,8 +22,8 @@ drop procedure VolunteersHaveMostHoursToDonateLeft
 drop 
 
 --2
--- צרי פרוצדורה שתקבל קוד שירות ותשלוף את המתנדבים שנותרו לו הכי 
---הרבה שעות לתרום החודש בשירות זה.
+-- Create a procedure that accepts a service code and retrieves the volunteers
+-- with the most remaining hours to contribute to this service this month.
 create procedure VolunteersHaveMostHoursToDonateLeft(@IdService int)
 as begin 
 select  v.FullName,v.IdVolunteer,v.Phone
@@ -36,8 +35,8 @@ end
 
 exec VolunteersHaveMostHoursToDonateLeft @IdService=2
 --3
---צרי פרוצדורה שתקבל קוד שירות ותחזיר כמה מתנדבים יש בשירת זה וכמה 
---בקשות אושרו בשירות זה השנה.
+--Create a procedure that accepts a service code and returns the number of volunteers
+--for that service and the number of requests approved for it this year.
 create procedure NumVolunteersForThisServiceAndApproved(@IdService int, @VolunteersCount int output, @ApprovedRequestsCount int output)
 as begin 
 
@@ -57,9 +56,8 @@ print @res1
 print @res2
 
 --4
---צרי פונקצייה שתקבל קוד שירות ותחזיר האם יש מספיק שעות שנתרמו
---האם מספר השעות שנתרמו בחודש גדול מהממוצע שעות שמבקשים- 
---בחודש.
+--Create a function that accepts a service code and returns whether enough hours have been donated.
+--Is the number of hours donated in a month greater than the average number of hours requested per month
  
 create function EnoughHoursDonated(@IdService int)
 returns bit
@@ -69,7 +67,7 @@ declare @TotalHoursAllTime int
 declare @FirstDate date
 declare @MonthsActive int
 declare @AverageMonthlyHours float
--- ממוצע לחודש זה 
+-- avg for this month 
 select @TotalHoursThisMonth = SUM(r.NumHours)
 from Requests r
 join ArrangedRequests ar on r.IdRequest = ar.IdRequest
@@ -77,17 +75,17 @@ where r.IdService = @IdService
 and r.StatusRequest = 'confirmed'
 and MONTH(r.DateRequest) = MONTH(GETDATE())
 and YEAR(r.DateRequest) = YEAR(GETDATE())
--- סך השעות מתמיד
+-- Total hours to date
 select @TotalHoursAllTime = SUM(r.NumHours)
 from Requests r
 join ArrangedRequests ar on r.IdRequest = ar.IdRequest
 where r.IdService = @IdService
 and r.StatusRequest = 'confirmed'
--- תאריך של הביקוש הראשון לסרביס הזה
+-- Date of the first request for this service
 select @FirstDate = MIN(DateRequest)
 from Requests
 where IdService = @IdService
--- חשבון מס החודשים
+-- Calculation of the number of months
 select @MonthsActive = DATEDIFF(MONTH, @FirstDate, GETDATE()) + 1
 -- avg
 select @AverageMonthlyHours = @TotalHoursAllTime/@MonthsActive
